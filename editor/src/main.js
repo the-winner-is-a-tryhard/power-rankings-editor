@@ -7,10 +7,14 @@ let mainWindow;
 
 function createWindow () {
     // Create the browser window.
+    console.log(path.join(__dirname, 'preload.js'));
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            enableRemoteModule: false,
             preload: path.join(__dirname, 'preload.js')
         }
     });
@@ -169,13 +173,12 @@ function openFile() {
         ]
     }).then(function (file) {
         if (!file) {
-            console.log('No files!')
             return;
         }
         else {
             const fileContent = fs.readFileSync(file.filePaths[0]).toString();
             console.log(fileContent);
+            mainWindow.webContents.send('fromMainNewFile', fileContent);
         }
-    })
-
+    });
 }
