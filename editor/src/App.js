@@ -1,33 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
 import {Component} from 'react';
+import Markdown from 'markdown-to-jsx';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-markdown';
+import 'ace-builds/src-noconflict/theme-dracula';
+import 'ace-builds/src-noconflict/ext-language_tools';
 
 class App extends Component {
+  state = {
+    loadedFile: ''
+  }
 
   constructor() {
     super();
     window.api.receive('fromMainNewFile', (fileContent) => {
-      console.log(fileContent);
+      this.setState({
+        loadedFile: fileContent
+      });
     });
   }
 
   render() {
     return (
         <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
+          <AceEditor
+              mode="markdown"
+              theme="dracula"
+              onChange={(updatedText) => { this.setState({loadedFile: updatedText}) }}
+              name="markdown-editor"
+              value={this.state.loadedFile}
+          />
+          <Markdown>{this.state.loadedFile}</Markdown>
         </div>
     );
   }

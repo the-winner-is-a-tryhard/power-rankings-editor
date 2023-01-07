@@ -1,20 +1,20 @@
 const {
     contextBridge,
     ipcRenderer
-} = require("electron");
+} = require('electron');
 
 contextBridge.exposeInMainWorld(
-    "api", {
+    'api', {
         send: (channel, data) => {
             let validChannels = ['toMain'];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
-        receive: (channel, func) => {
+        receive: (channel, listenerFunction) => {
             let validChannels = ['fromMainNewFile'];
             if (validChannels.includes(channel)) {
-                ipcRenderer.on(channel, (event, ...args) => func(...args));
+                ipcRenderer.on(channel, (event, ...args) => listenerFunction(...args));
             }
         }
     }

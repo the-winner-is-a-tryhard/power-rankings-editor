@@ -177,7 +177,6 @@ function openFile() {
         }
         else {
             const fileContent = fs.readFileSync(file.filePaths[0]).toString();
-            console.log(fileContent);
             mainWindow.webContents.send('fromMainNewFile', fileContent);
         }
     });
